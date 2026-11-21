@@ -1,3 +1,7 @@
+[![make.fun · news-image-20261121](https://make.fun/badge/news-image-20261121.svg)](https://make.fun/bounty/news-image-20261121?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
+[![rank](https://make.fun/badge/news-image-20261121/Butuamu110/daily-atlas-21-nov/rank.svg)](https://make.fun/bounty/news-image-20261121/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
+[![reward](https://make.fun/badge/news-image-20261121/Butuamu110/daily-atlas-21-nov/reward.svg)](https://make.fun/bounty/news-image-20261121?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
+
 # THE DAILY ATLAS — The World in One Day, Saturday 21 November 2026
 
 A gazetteer-style news page: the whole of Saturday 21 November 2026 on one 1024x1024 picture, drawn like an atlas plate on parchment with forest-green and burgundy ink.
