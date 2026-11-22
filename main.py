@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Deliver the finished Daily Atlas page for the grader.
+"""Hand in the finished Daily Atlas page.
 
-The artwork itself is rendered ahead of time by draw.py and stored in
-this folder as entry.png. At hand-in time there is nothing left to draw:
-this script simply places a copy of that PNG into whichever directory
-the MAKEFUN_OUTPUT_DIR environment variable points at, falling back to
-/output when the variable is absent.
+draw.py rendered the artwork ahead of time and committed it beside this
+file as entry.png. At hand-in there is nothing to redraw: copy that PNG
+into the directory named by the MAKEFUN_OUTPUT_DIR environment variable
+(falling back to /output when the variable is not set), then verify the
+copy is byte-identical before reporting success.
 """
 
 import hashlib
@@ -14,37 +14,31 @@ import shutil
 import sys
 from pathlib import Path
 
-FALLBACK_DIR = "/output"
-ARTWORK_NAME = "entry.png"
+
+def _sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
-def digest(path):
-    """SHA-256 of a file, read in chunks so size never matters."""
-    hasher = hashlib.sha256()
-    with open(path, "rb") as handle:
-        for block in iter(lambda: handle.read(65536), b""):
-            hasher.update(block)
-    return hasher.hexdigest()
-
-
-def deliver():
-    artwork = Path(__file__).resolve().parent / ARTWORK_NAME
-    if not artwork.is_file():
-        sys.exit("cannot hand in: %s not found" % artwork)
-
-    target_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", FALLBACK_DIR))
-    target_dir.mkdir(parents=True, exist_ok=True)
-    target = target_dir / ARTWORK_NAME
-
-    if target.resolve() != artwork:
-        shutil.copyfile(artwork, target)
-
-    if digest(target) != digest(artwork):
-        sys.exit("copy of %s does not match the original" % target)
-
-    print("handed in %s (%d bytes)" % (target, target.stat().st_size))
+def main():
+    src = Path(__file__).resolve().parent / "entry.png"
+    if not src.is_file():
+        print("entry.png missing beside main.py", file=sys.stderr)
+        return 1
+    out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    dst = out_dir / "entry.png"
+    if dst.resolve() != src.resolve():
+        shutil.copyfile(src, dst)
+    if _sha256(dst) != _sha256(src):
+        print("copied entry.png does not match the original", file=sys.stderr)
+        return 1
+    print("delivered %s (%d bytes)" % (dst, dst.stat().st_size))
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(deliver())
+    sys.exit(main())
